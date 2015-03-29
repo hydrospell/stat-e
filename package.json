@@ -1,0 +1,22 @@
+{
+  "name": "stat-e",
+  "version": "0.0.1",
+  "description": "Static Electricity - the quick and dirty static site generator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "static",
+    "blog",
+    "website",
+    "generator"
+  ],
+  "author": "siah@octobrain.net",
+  "license": "ISC",
+  "dependencies": {
+    "mustache": "^2.0.0",
+    "node-markdown": "^0.1.1",
+    "promise": "^6.1.0"
+  }
+}
