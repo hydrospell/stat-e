@@ -1,0 +1,34 @@
+/* 
+mostra-nuova
+ff-tisa-sans-web-pro
+sax-mono
+ */
+
+body {
+	font-family: ff-tisa-sans-web-pro, sans-serif;
+	color: #333;
+	background: #effcfc;
+	font-size: 75%;
+}
+
+p, li {
+	font-size: 1.3em;
+	line-height: 1.6em;
+}
+
+header {
+
+	ul {
+		text-align: center;
+
+		li {
+			font-family: mostra-nuova, sans-serif;
+			font-size: 1.2em;
+			font-weight: bold;
+			text-transform: uppercase;
+			display: inline-block;
+		}
+
+	}
+
+}
