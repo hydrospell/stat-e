@@ -1,5 +1,6 @@
-# Get started
+# Static Electricity!
 
+## Getting started:
 1. Configure directories in `config.json`
 
 ```
