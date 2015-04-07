@@ -1,5 +1,7 @@
 # Static Electricity!
 
+Warning!!! This is currently at "someone's pet project and that someone is some dude with an arch linux laptop with no compsci training and is probably a liberal arts major" phase. If you're any good at all at programming the code within will make you think "some people should not be allowed to install node.js".  
+
 ## Getting started:
 1. Configure directories in `config.json`
 
@@ -26,6 +28,7 @@ Here are some rules:
 	- `.mustache` bearing exact same file name as your source takes precendence over `index.mustache`
 
 Here are some features:
+
 1. File name of source file be file name of output file:  
     `test-this-stuff.md` => `test-this.stuff.html`
 
