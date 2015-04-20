@@ -20,6 +20,14 @@ p, li {
 	line-height: 1.6em;
 }
 
+a:link, a:visited {
+	color: #564231;
+}
+
+a:hover, a:active {
+	color: #564269;
+}
+
 code {
 	font-family: sax-mono, monospace;
 }
@@ -39,4 +47,15 @@ header {
 
 	}
 
+}
+
+.post {
+	img {
+		max-width: 100%;
+	}
+}
+
+container {
+	width: 80%;
+	margin: 0 auto;
 }

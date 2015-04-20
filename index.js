@@ -141,6 +141,7 @@ var bakeFile = function(filePath, isListing) {
 		fileInfo.fileName = filePath.split('/').splice(-1, 1)[0];
 
 		var outputName = fileInfo.fileName + '.html';
+		var listingName = fileInfo.fileName;
 
 		fs.readdir(fileInfo.fullPath, function(err, files) {
 			if (err) { handleError(err); }
@@ -159,6 +160,7 @@ var bakeFile = function(filePath, isListing) {
 								postInfo.title = data.split('\n')[0];
 								postInfo.content = Markdown(data.split('\n').slice(1).join('\n').trim());
 								postInfo.slug = file;
+								postInfo.permalink = function(){ var fileComp = file.split('.'); fileComp[fileComp.length - 1] = 'html'; file = fileComp.join('.'); return '/' + listingName + '/' + file; }();
 
 								callback(null, postInfo);
 							});

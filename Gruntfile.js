@@ -13,7 +13,8 @@ module.exports = function(grunt) {
 			},
 			clear: {
 				command: 'rm -rf /home/siah/dev/stat-e/public/*'
-			}
+			},
+			copy_images: 'cd ~/dev/stat-e && rsync -rz images public'
 		},
 		sass: {
 			dist: {
@@ -25,14 +26,24 @@ module.exports = function(grunt) {
 					ext: '.css'
 				}]
 			}
+		},
+		watch: {
+			css: {
+				files: ['src/**/*.scss'],
+				tasks: ['sass'],
+				options: {
+					livereload: true
+				}
+			},
 		}
 	});
 
 	grunt.loadNpmTasks('grunt-exec');
 	grunt.loadNpmTasks('grunt-contrib-sass');
+	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	// Default task(s).
-	grunt.registerTask('b', ['sass:dist','exec:bake']);
+	grunt.registerTask('b', ['sass:dist','exec:bake','exec:copy_images']);
 	grunt.registerTask('c', ['exec:clear']);
 	grunt.registerTask('bup', ['sass:dist','exec:bake', 'exec:upload_website']);
 	grunt.registerTask('up', ['exec:upload_website']);
