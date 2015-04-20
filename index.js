@@ -127,6 +127,7 @@ var ensureDirExists = function(){
 
 var bakeFile = function(filePath, isListing) {
 
+
 	var fileInfo = {
 		type: null,
 		fullPath : filePath,
@@ -136,19 +137,15 @@ var bakeFile = function(filePath, isListing) {
 	};
 
 	if (isListing) {
-
 		fileInfo.type = 'collection';
 		fileInfo.fileName = filePath.split('/').splice(-1, 1)[0];
 
 		var outputName = fileInfo.fileName + '.html';
 
-		var collectionInfo = {
-			posts : []
-		};
-
 		fs.readdir(fileInfo.fullPath, function(err, files) {
 			if (err) { handleError(err); }
 			
+			var postInfo = {};
 			var parallelTasks = [];
 			files.forEach(function(file, i, arr){
 				fs.stat(fileInfo.fullPath + '/' + file, function(err, stats){
@@ -157,16 +154,37 @@ var bakeFile = function(filePath, isListing) {
 						parallelTasks.push( function(callback){
 							fs.readFile(fileInfo.fullPath + '/' + file, 'utf8', function(err, data){
 								if (err) { callback(err); }
-								callback(null, { slug : file, body : data });
+
+								var postInfo = {};
+								postInfo.title = data.split('\n')[0];
+								postInfo.content = Markdown(data.split('\n').slice(1).join('\n').trim());
+								postInfo.slug = file;
+
+								callback(null, postInfo);
 							});
 						});
+					}
 
-						if (i === arr.length - 1) {
-							async.parallel(parallelTasks, function(err, results){
-								if (err) { throw(err); }
-								collectionInfo.posts = results;
+					if (i === arr.length - 1) {
+						async.parallel(parallelTasks, function(err, results){
+							if (err) { throw(err); }
+							postInfo.collection = results;
+							getTemplateForFile(fileInfo, function(err, tpObj){
+								if (err) {handleError(err); }
+								var out = Mustache.render(tpObj.template, postInfo, tpObj.partials);
+
+								fileInfo.dirComponents[0] = config.public_dir;
+
+								// testPath checks for and creates dirs in paths before writing output .html
+								testPath(fileInfo.dirComponents).then(function(){
+									var outFileName = fileInfo.fileName + '.html';
+									var filePath = fileInfo.dirComponents.join('/') + '/' + outFileName;
+									fs.writeFile(filePath, out, function(err){
+										if (err) { handleError(err); }
+									});
+								});
 							});
-						}
+						});
 					}
 				});
 			});
@@ -196,7 +214,6 @@ var bakeFile = function(filePath, isListing) {
 				fileInfo.dirComponents[0] = config.public_dir;
 
 				// testPath checks for and creates subdirs before writing output .html
-
 				testPath(fileInfo.dirComponents).then(function(){
 					var outFileName = fileInfo.fileName.replace(fileInfo.fileExtension, 'html');
 					var filePath = fileInfo.dirComponents.join('/') + '/' + outFileName;
@@ -234,7 +251,7 @@ var getTemplateForFile = function(){
 							f(null, data);
 						})
 					}, function(err, results){
-						if (err) { throw err; }
+						if (err) { throw(err); }
 						callback(null);
 					});
 				});
@@ -245,11 +262,27 @@ var getTemplateForFile = function(){
 					throw(err);
 				}
 
-				// template logic goes here
-				// if fileInfo.type = post, try `same name`-template, try `folder`-template, finally try index.mustache
-				// if fileInfo.type = collection, try `name`-collection, finally try collection.mustache
-				console.log(fileInfo.type);
-				cb(null, { template: templates.index, partials: templates });
+				var tpObj = {
+					template: null,
+					partials: templates
+				};
+
+				if (templates[fileInfo.fileName]) {
+					tpObj.template = templates['index_' + fileInfo.filename];
+				} else if (templates[fileInfo.dirComponents.slice(-1, 1)]) {
+					tpObj.template = templates['col_' + fileInfo.dirComponents.slice(-1, 1)];
+				} else {
+				if (fileInfo.type === 'post') {
+					tpObj.template = templates.index
+				}
+
+				if (fileInfo.type === 'collection') {
+					tpObj.template = templates.collection
+				}
+				}
+
+
+				cb(null, tpObj);
 			}
 		);
 	};

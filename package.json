@@ -20,6 +20,8 @@
     "grunt-exec": "^0.4.6",
     "mustache": "^2.0.0",
     "node-markdown": "^0.1.1",
-    "promise": "^6.1.0"
+    "promise": "^6.1.0",
+    "ecstatic": "~0.7.1",
+    "express": "~4.12.3"
   }
 }

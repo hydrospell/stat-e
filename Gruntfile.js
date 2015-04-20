@@ -10,6 +10,9 @@ module.exports = function(grunt) {
 			},
 			bake: {
 				command: 'node index'
+			},
+			clear: {
+				command: 'rm -rf /home/siah/dev/stat-e/public/*'
 			}
 		},
 		sass: {
@@ -30,6 +33,7 @@ module.exports = function(grunt) {
 
 	// Default task(s).
 	grunt.registerTask('b', ['sass:dist','exec:bake']);
+	grunt.registerTask('c', ['exec:clear']);
 	grunt.registerTask('bup', ['sass:dist','exec:bake', 'exec:upload_website']);
 	grunt.registerTask('up', ['exec:upload_website']);
 };
