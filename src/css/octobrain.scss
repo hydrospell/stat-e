@@ -7,7 +7,7 @@ sax-mono
 body {
 	font-family: ff-tisa-sans-web-pro, sans-serif;
 	color: #333;
-	background: #effcfc;
+	background: #fff;
 	font-size: 75%;
 }
 
@@ -33,29 +33,70 @@ code {
 }
 
 header {
+	text-align: center;
 
 	ul {
 		text-align: center;
+		padding: 0;
+		margin: 0;
 
 		li {
+			margin: 0;
+			padding: 0 0 0 1em;
 			font-family: sax-mono, sans-serif;
 			font-size: 1.2em;
 			font-weight: bold;
 			text-transform: uppercase;
 			display: inline-block;
+			
+			a {
+				text-decoration: none;
+			}
 		}
 
 	}
 
 }
 
+h1#homepage-blurb {
+	font-size: 22em;
+}
+
 .post {
+
+	h1 {
+		a {
+			text-decoration: none;
+			color: #665043;
+		}
+	}
+
 	img {
 		max-width: 100%;
 	}
 }
 
-container {
+.post.graphic {
+	width: 46%;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	float: left;
+	padding: 0 2%;
+}
+
+#container {
 	width: 80%;
 	margin: 0 auto;
+
+	hr {
+		border: 0;
+		border-bottom: 1px solid #ccc;
+	}
+}
+
+footer {
+	clear: both;
+	text-align: center;
+	color: #ccc;
 }

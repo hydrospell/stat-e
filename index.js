@@ -133,7 +133,8 @@ var bakeFile = function(filePath, isListing) {
 		fullPath : filePath,
 		dirComponents: function(fp) { var arr = fp.split('/').splice(0); arr.splice(-1, 1); return arr; }(filePath), 
 		timeCreated : null,
-		timeModified : null
+		timeModified : null,
+		slug: filePath
 	};
 
 	if (isListing) {
@@ -157,11 +158,11 @@ var bakeFile = function(filePath, isListing) {
 								if (err) { callback(err); }
 
 								var postInfo = {};
-								postInfo.title = data.split('\n')[0];
+								postInfo.title = Markdown(data.split('\n')[0]);
 								postInfo.content = Markdown(data.split('\n').slice(1).join('\n').trim());
 								postInfo.slug = file;
 								postInfo.permalink = function(){ var fileComp = file.split('.'); fileComp[fileComp.length - 1] = 'html'; file = fileComp.join('.'); return '/' + listingName + '/' + file; }();
-
+								postInfo.timestamp = stats.mtime;
 								callback(null, postInfo);
 							});
 						});
@@ -171,6 +172,9 @@ var bakeFile = function(filePath, isListing) {
 						async.parallel(parallelTasks, function(err, results){
 							if (err) { throw(err); }
 							postInfo.collection = results;
+							postInfo.collection.sort(function(a, b){
+								return b.timestamp - a.timestamp;
+							});
 							getTemplateForFile(fileInfo, function(err, tpObj){
 								if (err) {handleError(err); }
 								var out = Mustache.render(tpObj.template, postInfo, tpObj.partials);
@@ -207,7 +211,7 @@ var bakeFile = function(filePath, isListing) {
 
 				if (err) { handleError(err); }
 
-				postInfo.title = data.split('\n')[0];
+				postInfo.title = Markdown(data.split('\n')[0]);
 				postInfo.content = Markdown(data.split('\n').slice(1).join('\n').trim());
 
 
@@ -269,20 +273,19 @@ var getTemplateForFile = function(){
 					partials: templates
 				};
 
-				if (templates[fileInfo.fileName]) {
-					tpObj.template = templates['index_' + fileInfo.filename];
-				} else if (templates[fileInfo.dirComponents.slice(-1, 1)]) {
-					tpObj.template = templates['col_' + fileInfo.dirComponents.slice(-1, 1)];
-				} else {
 				if (fileInfo.type === 'post') {
-					tpObj.template = templates.index
+					if (templates[fileInfo.fileName]) {
+						tpObj.template = templates[fileInfo.fileName];
+					} else {
+						tpObj.template = templates.index
+					}
+				} else if (fileInfo.type === 'collection') {
+					if (templates['collection_' + fileInfo.fileName]) {
+						tpObj.template = templates['collection_' + fileInfo.fileName];
+					} else {
+						tpObj.template = templates.collection
+					}
 				}
-
-				if (fileInfo.type === 'collection') {
-					tpObj.template = templates.collection
-				}
-				}
-
 
 				cb(null, tpObj);
 			}
