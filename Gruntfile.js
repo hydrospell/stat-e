@@ -5,7 +5,7 @@ module.exports = function(grunt) {
 		pkg: grunt.file.readJSON('package.json'),
 		exec: {
 			upload_website: {
-				command: 'rsync -avr public/ siah@arbtr.com:www/octobrain.net/pages/',
+				command: 'cd ~/dev/stat-e && rsync -vrz public/ siah@arbtr.com:www/octobrain.net/pages/',
 				stdout: true
 			},
 			bake: {
@@ -14,7 +14,7 @@ module.exports = function(grunt) {
 			clear: {
 				command: 'rm -rf /home/siah/dev/stat-e/public/*'
 			},
-			copy_images: 'cd ~/dev/stat-e && rsync -rz images public'
+			copy_images: 'cd ~/dev/stat-e && rsync -vrz images public'
 		},
 		sass: {
 			dist: {
